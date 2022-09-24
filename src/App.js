@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Routes, Route } from "react-router-dom";
+import {Routes, Route, Outlet} from "react-router-dom";
 import {Home} from "./modules/Home";
 import {NotFoundPage} from "./components/NotFoundPage";
-import {Layout} from "./components/Layout";
 import './App.css'
+import {Header} from "./components/Header/Header";
 
 export const App = () => {
   return (
@@ -17,3 +17,10 @@ export const App = () => {
     </div>
   );
 }
+
+const Layout = () => (
+    <>
+        <Header/>
+        <Outlet/>
+    </>
+)

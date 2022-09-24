@@ -1,0 +1,10 @@
+.header {
+    padding: 1em;
+    border-bottom: 1px solid #c1b9b9;
+}
+
+.link {
+    font-size: 1.2em;
+    text-decoration: none;
+    color: blue;
+}
