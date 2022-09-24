@@ -1,4 +1,3 @@
-import * as React from "react";
 import {Routes, Route, Outlet} from "react-router-dom";
 import {Home} from "./modules/Home";
 import {NotFoundPage} from "./components/NotFoundPage";
@@ -7,7 +6,7 @@ import {Header} from "./components/Header/Header";
 
 export const App = () => {
   return (
-    <div className='App'>
+    <div className='app'>
         <Routes>
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Home/>} />
@@ -21,6 +20,8 @@ export const App = () => {
 const Layout = () => (
     <>
         <Header/>
-        <Outlet/>
+        <div className='layout'>
+            <Outlet/>
+        </div>
     </>
 )

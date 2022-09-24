@@ -1,6 +1,5 @@
-import * as React from "react";
-import './Header.css'
 import {Link} from "react-router-dom";
+import './Header.css'
 
 export const Header = () => (
     <div className='header'>
