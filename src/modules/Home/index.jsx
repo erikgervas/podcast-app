@@ -2,6 +2,8 @@ import {useEffect, useState} from "react";
 import podcastService from "../../services/PodcastService";
 import {Podcast} from "./Podcast/Podcast";
 import './Home.css'
+import {Link} from "react-router-dom";
+import {routes} from "../../routes";
 
 const podcastMatchesFilter = (textToFilterBy) => (podcast) => {
     const textInUpperCase = textToFilterBy.toUpperCase();
@@ -35,7 +37,12 @@ export const Home = () => {
           <div className='podcast-list'>
               { podcasts
                   .filter(podcastMatchesFilter(textToFilterBy))
-                  .map(podcast => <div className='podcast' key={podcast.id}><Podcast {...podcast}/></div>)
+                  .map(podcast =>
+                  <div role='button' className='podcast' key={podcast.id}>
+                      <Link style={{textDecoration: 'none'}} to={routes.podcastDetail.replace(':podcastId', podcast.id)}>
+                          <Podcast {...podcast}/>
+                      </Link>
+                  </div>)
               }
           </div>
       </div>
