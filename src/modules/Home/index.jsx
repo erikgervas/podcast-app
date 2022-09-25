@@ -35,7 +35,7 @@ export const Home = () => {
           <div className='podcast-list'>
               { podcasts
                   .filter(podcastMatchesFilter(textToFilterBy))
-                  .map(podcast => <div className='podcast'><Podcast {...podcast}/></div>)
+                  .map(podcast => <div className='podcast' key={podcast.id}><Podcast {...podcast}/></div>)
               }
           </div>
       </div>

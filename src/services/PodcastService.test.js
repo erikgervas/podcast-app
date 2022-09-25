@@ -10,20 +10,66 @@ const podcastImage = "https://is5-ssl.mzstatic.com/image/thumb/Podcasts112/v4/30
 describe('PodcastService', () => {
 
     beforeEach(() => {
+        localStorage.clear();
+
         axios.create.mockImplementation(() => ({ get() {
                 return Promise.resolve({ data: { feed: { entry: [apiMockPodcast] } } }) }
             }));
     })
 
-    it('builds the top podcasts list correctly', async () => {
-        const podcastService = new PodcastService();
+    describe('getTopPodcasts', () => {
 
-        const firstPodcast = (await podcastService.getTopPodcasts())[0];
+        it('builds the top podcasts list correctly', async () => {
+            const podcastService = new PodcastService();
 
-        expect(firstPodcast.name).toEqual(podcastName);
-        expect(firstPodcast.artist).toEqual(podcastArtist);
-        expect(firstPodcast.imageUrl).toEqual(podcastImage);
+            const firstPodcast = (await podcastService.getTopPodcasts())[0];
+
+            expect(firstPodcast.name).toEqual(podcastName);
+            expect(firstPodcast.artist).toEqual(podcastArtist);
+            expect(firstPodcast.imageUrl).toEqual(podcastImage);
+        });
     });
+
+    describe('handleRequestWithExpiry', () => {
+
+        it('request gets called once before expiring and the response is saved in localStorage', async () => {
+            const podcastService = new PodcastService();
+            const request = jest.fn(() => Promise.resolve("my-value"));
+
+            await podcastService.handleRequestWithExpiry(request, 'my-request');
+
+            //2nd request grabs value from localstorage
+            await podcastService.handleRequestWithExpiry(request, 'my-request');
+
+            expect(request).toHaveBeenCalledTimes(1);
+            expect(JSON.parse(localStorage.getItem('my-request')).value).toEqual('my-value');
+        });
+
+        describe('when request is expired', () => {
+
+            let podcastService = new PodcastService();
+            const ttl = 3600 * 1000; //1 hour
+            const requestKey = 'my-request';
+
+            beforeEach(async () => {
+                jest.useFakeTimers();
+
+                const request = () => Promise.resolve("my-value");
+                await podcastService.handleRequestWithExpiry(request, requestKey, ttl);
+
+                jest.advanceTimersByTime(ttl);
+            });
+
+            it('same tagged request gets called again and new response is saved', async () => {
+                const request = jest.fn(() => Promise.resolve("my-value-updated"));
+
+                await podcastService.handleRequestWithExpiry(request, requestKey);
+
+                expect(request).toHaveBeenCalledTimes(1);
+                expect(JSON.parse(localStorage.getItem(requestKey)).value).toEqual('my-value-updated');
+            })
+        })
+    })
 });
 
 const apiMockPodcast = {
