@@ -4,11 +4,11 @@ import {NotFoundPage} from "./components/NotFoundPage";
 import {Header} from "./components/Header/Header";
 import {PodcastDetail} from "./modules/PodcastDetail";
 import {routes} from "./routes";
-import './App.css'
+import styles from './App.module.css'
 
 export const App = () => {
   return (
-    <div className='app'>
+    <div className={styles.app}>
         <Routes>
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Home/>} />
@@ -23,7 +23,7 @@ export const App = () => {
 const Layout = () => (
     <>
         <Header/>
-        <div className='layout'>
+        <div className={styles.layout}>
             <Outlet/>
         </div>
     </>

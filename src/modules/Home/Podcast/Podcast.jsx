@@ -1,11 +1,9 @@
-import './Podcast.css';
+import styles from './Podcast.module.css';
 
-export const Podcast = ({ name, artist, imageUrl }) => {
-    return (
-        <div className='card'>
-            <img className='image' src={imageUrl} alt='podcast'/>
-            <div className='title'>{name.toUpperCase()}</div>
-            <div className='author'>Author: {artist}</div>
-        </div>
-    );
-}
+export const Podcast = ({ name, artist, imageUrl }) => (
+    <div className={styles.card}>
+        <img className={styles.image} src={imageUrl} alt='podcast'/>
+        <div className={styles.title}>{name.toUpperCase()}</div>
+        <div className={styles.author}>Author: {artist}</div>
+    </div>
+);

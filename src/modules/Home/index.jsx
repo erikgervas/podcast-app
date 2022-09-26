@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import podcastService from "../../services/PodcastService";
 import {Podcast} from "./Podcast/Podcast";
-import './Home.css'
+import styles from './Home.module.css'
 import {Link} from "react-router-dom";
 import {routes} from "../../routes";
 
@@ -29,16 +29,16 @@ export const Home = () => {
     };
 
     return(
-      <div className='home'>
-          <div className='filter-box'>
-              <div className='badge'>100</div>
-              <input className='filter-input' type="text" placeholder='Filter podcasts...' value={textToFilterBy} onChange={onInputChange}/>
+      <div className={styles.home}>
+          <div className={styles.filterBox}>
+              <div className={styles.badge}>100</div>
+              <input className={styles.filterInput} type="text" placeholder='Filter podcasts...' value={textToFilterBy} onChange={onInputChange}/>
           </div>
-          <div className='podcast-list'>
+          <div className={styles.podcastList}>
               { podcasts
                   .filter(podcastMatchesFilter(textToFilterBy))
                   .map(podcast =>
-                  <div role='button' className='podcast' key={podcast.id}>
+                  <div role='button' className={styles.podcast} key={podcast.id}>
                       <Link style={{textDecoration: 'none'}} to={routes.podcastDetail.replace(':podcastId', podcast.id)}>
                           <Podcast {...podcast}/>
                       </Link>

@@ -1,4 +1,4 @@
-.podcast-list {
+.podcastList {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -18,7 +18,7 @@
     margin-right: 0;
 }
 
-.filter-box {
+.filterBox {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -38,7 +38,7 @@
     font-size: 1.2rem;
 }
 
-.filter-input {
+.filterInput {
     width: 20vw;
     padding: 0.5rem;
     font-size: 1rem;
