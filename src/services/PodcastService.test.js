@@ -6,18 +6,61 @@ jest.mock("axios");
 const podcastName = "Björk: Sonic Symbolism";
 const podcastArtist = "Mailchimp";
 const podcastImage = "https://is5-ssl.mzstatic.com/image/thumb/Podcasts112/v4/30/b6/62/30b662d2-9f51-ebb9-1a0f-6f8266d809c9/mza_8443931357531296046.jpeg/170x170bb.png";
+const podcastDescription = "Join Björk in conversations with collaborators about her sound experiences. In the podcast you’ll learn about the moods, timbers, and tempos that vibrate through each album.";
+const episodeTitle = "Volta";
+const episodeDescription = "Justice, fire, anthropology, wanderlust, activist, brass, boats, feminist, red, neon green, electric blue, flags, trumpets, tribal beats, bombastic.";
+const episodePubDate = "Thu, 22 Sep 2022 08:00:00 -0000";
+const episodeDuration = "2353";
+const episodeAudioUrl = "https://traffic.megaphone.fm/MC8192665151.mp3?updated=1662485439";
+
+jest.mock('xml-js', () => ({ xml2json: jest.fn() }));
 
 describe('PodcastService', () => {
 
     beforeEach(() => {
         localStorage.clear();
-
-        axios.create.mockImplementation(() => ({ get() {
-                return Promise.resolve({ data: { feed: { entry: [apiMockPodcast] } } }) }
-            }));
+        jest.restoreAllMocks();
     })
 
     describe('getTopPodcasts', () => {
+
+        beforeEach(() => {
+            const apiMockPodcast = {
+                "im:name": {
+                    "label": podcastName
+                },
+                "im:image": [
+                    {
+                        "label": "https://is4-ssl.mzstatic.com/image/thumb/Podcasts112/v4/30/b6/62/30b662d2-9f51-ebb9-1a0f-6f8266d809c9/mza_8443931357531296046.jpeg/55x55bb.png",
+                        "attributes": {
+                            "height": "55"
+                        }
+                    },
+                    {
+                        "label": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/30/b6/62/30b662d2-9f51-ebb9-1a0f-6f8266d809c9/mza_8443931357531296046.jpeg/60x60bb.png",
+                        "attributes": {
+                            "height": "60"
+                        }
+                    },
+                    {
+                        "label": podcastImage,
+                        "attributes": {
+                            "height": "170"
+                        }
+                    }
+                ],
+                "im:artist": {
+                    "label": podcastArtist
+                },
+                "id": {
+                    "attributes": {
+                        "im:id": "1641171534"
+                    }
+                },
+            }
+
+            axios.get.mockImplementation(() => Promise.resolve({ data: { feed: { entry: [apiMockPodcast] } } }));
+        })
 
         it('builds the top podcasts list correctly', async () => {
             const podcastService = new PodcastService();
@@ -27,6 +70,76 @@ describe('PodcastService', () => {
             expect(firstPodcast.name).toEqual(podcastName);
             expect(firstPodcast.artist).toEqual(podcastArtist);
             expect(firstPodcast.imageUrl).toEqual(podcastImage);
+        });
+    });
+
+    describe('getPodcastDetail', () => {
+
+        beforeEach(() => {
+            const apiMockPodcastDetail = {
+                "results": [
+                    {
+                        "artistName": podcastArtist,
+                        "trackName": podcastName,
+                        "artworkUrl600": podcastImage,
+                    }
+                ]
+            }
+
+            axios.get.mockImplementation(() => Promise.resolve({ data: apiMockPodcastDetail }));
+
+            const feed = {
+                "rss": {
+                    "channel": {
+                        "description": {
+                            "_text": podcastDescription
+                        },
+                        "item": [
+                            {
+                                "title": {
+                                    "_text": episodeTitle
+                                },
+                                "description": {
+                                    "_text": episodeDescription
+                                },
+                                "pubDate": {
+                                    "_text": episodePubDate
+                                },
+                                "enclosure": {
+                                    "_attributes": {
+                                        "url": episodeAudioUrl,
+                                        "length": "0",
+                                        "type": "audio/mpeg"
+                                    }
+                                },
+                                "itunes:duration": {
+                                    "_text": episodeDuration
+                                },
+                            }
+                        ]
+                    }
+                }
+            }
+
+            jest.spyOn(JSON, 'parse').mockReturnValue(feed);
+        })
+
+        it('builds the podcast detail correctly', async () => {
+            const podcastService = new PodcastService();
+
+            const podcastDetail = (await podcastService.getPodcastDetail(12345));
+
+            expect(podcastDetail.id).toEqual(12345);
+            expect(podcastDetail.name).toEqual(podcastName);
+            expect(podcastDetail.artist).toEqual(podcastArtist);
+            expect(podcastDetail.imageUrl).toEqual(podcastImage);
+            expect(podcastDetail.episodes).toEqual([{
+                title: episodeTitle,
+                duration: episodeDuration,
+                description: episodeDescription,
+                publishedAt: episodePubDate,
+                audioUrl: episodeAudioUrl,
+            }]);
         });
     });
 
@@ -71,78 +184,3 @@ describe('PodcastService', () => {
         })
     })
 });
-
-const apiMockPodcast = {
-    "im:name": {
-        "label": podcastName
-    },
-    "im:price": {
-        "label": "Get",
-        "attributes": {
-            "amount": "0",
-            "currency": "USD"
-        }
-    },
-    "im:image": [
-        {
-            "label": "https://is4-ssl.mzstatic.com/image/thumb/Podcasts112/v4/30/b6/62/30b662d2-9f51-ebb9-1a0f-6f8266d809c9/mza_8443931357531296046.jpeg/55x55bb.png",
-            "attributes": {
-                "height": "55"
-            }
-        },
-        {
-            "label": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/30/b6/62/30b662d2-9f51-ebb9-1a0f-6f8266d809c9/mza_8443931357531296046.jpeg/60x60bb.png",
-            "attributes": {
-                "height": "60"
-            }
-        },
-        {
-            "label": podcastImage,
-            "attributes": {
-                "height": "170"
-            }
-        }
-    ],
-    "summary": {
-        "label": "Join Björk in conversations with collaborators about her sound experiences. In the podcast you’ll learn about the moods, timbers, and tempos that vibrate through each album."
-    },
-    "im:artist": {
-        "label": podcastArtist
-    },
-    "title": {
-        "label": "Björk: Sonic Symbolism - Mailchimp"
-    },
-    "link": {
-        "attributes": {
-            "rel": "alternate",
-            "type": "text/html",
-            "href": "https://podcasts.apple.com/us/podcast/bj%C3%B6rk-sonic-symbolism/id1641171534?uo=2"
-        }
-    },
-    "id": {
-        "label": "https://podcasts.apple.com/us/podcast/bj%C3%B6rk-sonic-symbolism/id1641171534?uo=2",
-        "attributes": {
-            "im:id": "1641171534"
-        }
-    },
-    "im:contentType": {
-        "attributes": {
-            "term": "Podcast",
-            "label": "Podcast"
-        }
-    },
-    "category": {
-        "attributes": {
-            "im:id": "1525",
-            "term": "Music Interviews",
-            "scheme": "https://podcasts.apple.com/us/genre/podcasts-music-music-interviews/id1525?uo=2",
-            "label": "Music Interviews"
-        }
-    },
-    "im:releaseDate": {
-        "label": "2022-09-15T01:00:00-07:00",
-        "attributes": {
-            "label": "September 15, 2022"
-        }
-    }
-}
