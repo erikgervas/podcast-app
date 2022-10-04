@@ -1,0 +1,13 @@
+.layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.podcastCard {
+    width: 20%;
+}
+
+.podcastEpisodes {
+    width: 70%;
+}

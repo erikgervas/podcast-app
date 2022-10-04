@@ -1,0 +1,28 @@
+.image {
+    border-radius: 5%;
+    width: 10vw;
+    height: 10vw;
+}
+
+.titleBox {
+    padding: 1rem;
+    margin: 2rem 0;
+    border-top: 1px solid #4c4a4a;
+    border-bottom: 1px solid #4c4a4a;
+}
+
+.title {
+    font-weight: bold;
+}
+
+.author {
+    font-style: italic;
+}
+
+.descriptionTitle {
+    font-weight: bold;
+}
+
+.description {
+    font-style: italic;
+}

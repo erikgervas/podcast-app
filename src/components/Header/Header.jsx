@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
-import './Header.css'
+import styles from './Header.module.css'
 
 export const Header = () => (
-    <div className='header'>
-        <Link className='link' to="/">Podcaster</Link>
+    <div className={styles.header}>
+        <Link className={styles.link} to="/">Podcaster</Link>
     </div>
 )
