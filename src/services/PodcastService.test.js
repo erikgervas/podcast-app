@@ -12,6 +12,7 @@ const episodeDescription = "Justice, fire, anthropology, wanderlust, activist, b
 const episodePubDate = "Thu, 22 Sep 2022 08:00:00 -0000";
 const episodeDuration = "2353";
 const episodeAudioUrl = "https://traffic.megaphone.fm/MC8192665151.mp3?updated=1662485439";
+const episodeAudioType = "audio/mpeg";
 
 jest.mock('xml-js', () => ({ xml2json: jest.fn() }));
 
@@ -108,8 +109,7 @@ describe('PodcastService', () => {
                                 "enclosure": {
                                     "_attributes": {
                                         "url": episodeAudioUrl,
-                                        "length": "0",
-                                        "type": "audio/mpeg"
+                                        "type": episodeAudioType
                                     }
                                 },
                                 "itunes:duration": {
@@ -134,11 +134,15 @@ describe('PodcastService', () => {
             expect(podcastDetail.artist).toEqual(podcastArtist);
             expect(podcastDetail.imageUrl).toEqual(podcastImage);
             expect(podcastDetail.episodes).toEqual([{
+                id: 1,
                 title: episodeTitle,
                 duration: episodeDuration,
                 description: episodeDescription,
                 publishedAt: episodePubDate,
-                audioUrl: episodeAudioUrl,
+                audio: {
+                    url: episodeAudioUrl,
+                    type: episodeAudioType,
+                },
             }]);
         });
     });

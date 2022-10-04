@@ -23,7 +23,7 @@ export const PodcastDetail = () => {
                 <Podcast {...podcastDetail}/>
             </div>
             <div className={styles.podcastEpisodes}>
-                <Episodes episodes={podcastDetail.episodes}/>
+                <Episodes podcastId={podcastDetail.id} episodes={podcastDetail.episodes}/>
             </div>
         </div>
     )

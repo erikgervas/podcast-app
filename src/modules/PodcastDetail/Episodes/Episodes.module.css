@@ -33,3 +33,8 @@
     font-weight: bold;
     height: 3vh;
 }
+
+.link {
+    text-decoration: none;
+    color: #3366BB ;
+}

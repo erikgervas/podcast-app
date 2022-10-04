@@ -5,6 +5,7 @@ import {Header} from "./components/Header/Header";
 import {PodcastDetail} from "./modules/PodcastDetail";
 import {routes} from "./routes";
 import styles from './App.module.css'
+import {EpisodeDetail} from "./modules/EpisodeDetail";
 
 export const App = () => {
   return (
@@ -13,6 +14,7 @@ export const App = () => {
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Home/>} />
                 <Route path={routes.podcastDetail} element={<PodcastDetail/>} />
+                <Route path={routes.episodeDetail} element={<EpisodeDetail/>} />
             </Route>
             <Route path="*" element={<NotFoundPage/>} />
         </Routes>

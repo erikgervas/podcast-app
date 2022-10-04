@@ -1,7 +1,8 @@
 import axios from 'axios';
 import {xml2json} from "xml-js";
 
-const DEFAULT_TTL_IN_MILLIS = 3600 * 1000 * 24; //1 DAY
+//const DEFAULT_TTL_IN_MILLIS = 3600 * 1000 * 24; //1 DAY
+const DEFAULT_TTL_IN_MILLIS = 1; //1 DAY
 
 export class PodcastService {
 
@@ -34,12 +35,16 @@ export class PodcastService {
                 description: feed.description._text || feed.description._cdata,
                 artist: podcast.artistName,
                 imageUrl: podcast.artworkUrl600,
-                episodes: feed.item.map(episode => ({
+                episodes: feed.item.map((episode, index) => ({
+                    id: index + 1,
                     title: episode.title._text,
-                    description: episode.description._text,
+                    description: episode.description._text || episode.description._cdata,
                     duration: episode['itunes:duration']._text,
                     publishedAt: episode.pubDate._text,
-                    audioUrl: episode.enclosure._attributes.url,
+                    audio:  {
+                        url: episode.enclosure._attributes.url,
+                        type: episode.enclosure._attributes.type,
+                    },
                 }))
             });
         };
