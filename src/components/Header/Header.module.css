@@ -1,4 +1,6 @@
 .header {
+    display: flex;
+    justify-content: space-between;
     padding: 1em;
     border-bottom: 1px solid rgba(0,0,0,.1);
 }
@@ -6,6 +8,6 @@
 .link {
     font-size: 1.2rem;
     text-decoration: none;
-    color: #3366BB ;
+    color: #3366BB;
     font-weight: bold;
 }
