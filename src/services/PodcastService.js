@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {xml2json} from "xml-js";
 
-//const DEFAULT_TTL_IN_MILLIS = 3600 * 1000 * 24; //1 DAY
-const DEFAULT_TTL_IN_MILLIS = 1; //1 DAY
+const DEFAULT_TTL_IN_MILLIS = 3600 * 1000 * 24; //1 DAY
+
+const logError = error => console.log(`${error.message}: ${error.response.data}`);
 
 export class PodcastService {
 
@@ -21,7 +22,7 @@ export class PodcastService {
                 }))
         }
 
-        return this.handleRequestWithExpiry(request,'topPodcasts');
+        return this.handleRequestWithExpiry(request,'topPodcasts').catch(logError);
     }
 
     getPodcastDetail(podcastId) {
@@ -37,10 +38,10 @@ export class PodcastService {
                 imageUrl: podcast.artworkUrl600,
                 episodes: feed.item.map((episode, index) => ({
                     id: index + 1,
-                    title: episode.title._text,
+                    title: episode.title._text || episode.title._cdata,
                     description: episode.description._text || episode.description._cdata,
-                    duration: episode['itunes:duration']._text,
-                    publishedAt: episode.pubDate._text,
+                    duration: episode['itunes:duration']._text || episode['itunes:duration']._cdata,
+                    publishedAt: episode.pubDate._text || episode.pubDate._cdata,
                     audio:  {
                         url: episode.enclosure._attributes.url,
                         type: episode.enclosure._attributes.type,
@@ -49,7 +50,7 @@ export class PodcastService {
             });
         };
 
-        return this.handleRequestWithExpiry(request,`podcastDetail-${podcastId}`);
+        return this.handleRequestWithExpiry(request,`podcastDetail-${podcastId}`).catch(logError);
     }
 
     async handleRequestWithExpiry(request, key, ttl = DEFAULT_TTL_IN_MILLIS) {

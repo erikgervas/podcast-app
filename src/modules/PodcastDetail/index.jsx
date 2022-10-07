@@ -8,7 +8,7 @@ import {getPodcastDetail} from "../../redux/podcastDetail.slice";
 
 export const PodcastDetail = () => {
     const params = useParams();
-    const { podcastDetail, error } = useSelector(state => state.podcastDetail);
+    const { podcastDetail } = useSelector(state => state.podcastDetail);
     const dispatch = useDispatch();
 
     useEffect( () => {

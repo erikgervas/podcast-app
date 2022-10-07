@@ -14,7 +14,7 @@ const podcastMatchesFilter = (textToFilterBy) => (podcast) => {
 }
 
 export const Home = () => {
-    const { topPodcasts, error } = useSelector(state => state.topPodcasts);
+    const { topPodcasts } = useSelector(state => state.topPodcasts);
     const dispatch = useDispatch();
     const [textToFilterBy, setTextToFilterBy] = useState('');
 

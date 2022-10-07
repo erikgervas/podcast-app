@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getPodcastDetail} from "../../redux/podcastDetail.slice";
 
 export const EpisodeDetail = () => {
-    const { podcastDetail, error } = useSelector(state => state.podcastDetail);
+    const { podcastDetail } = useSelector(state => state.podcastDetail);
     const params = useParams();
     const dispatch = useDispatch();
 
