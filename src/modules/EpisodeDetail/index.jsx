@@ -4,20 +4,19 @@ import podcastService from "../../services/PodcastService";
 import styles from "./EpisodeDetail.module.css";
 import {Podcast} from "../PodcastDetail/Podcast/Podcast";
 import {Card} from "../../components/Card/Card";
+import {useDispatch, useSelector} from "react-redux";
+import {getPodcastDetail} from "../../redux/podcastDetail.slice";
 
 export const EpisodeDetail = () => {
-    const [podcastDetail, setPodcastDetail] = useState({ episode: { audio: {}} });
+    const { podcastDetail, error } = useSelector(state => state.podcastDetail);
     const params = useParams();
-    const { episode } = podcastDetail;
+    const dispatch = useDispatch();
+
+    const episode = podcastDetail.episodes.find(({ id }) => id.toString() === params.episodeId);
 
     useEffect( () => {
-        const fetchPodcastDetail = async () => {
-            const podcastDetail = await podcastService.getPodcastDetail(params.podcastId);
-            const episode = podcastDetail.episodes.find(({ id }) => id.toString() === params.episodeId);
-            setPodcastDetail({ ...podcastDetail, episode });
-        }
-        fetchPodcastDetail();
-    }, [params.podcastId, params.episodeId])
+        dispatch(getPodcastDetail(params.podcastId));
+    }, [dispatch, params.podcastId]);
 
     return (
         <div className={styles.layout}>

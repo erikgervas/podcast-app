@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
-import podcastService from "../../services/PodcastService";
 import {Podcast} from "./Podcast/Podcast";
 import styles from './Home.module.css'
 import {Link} from "react-router-dom";
 import {routes} from "../../routes";
+import {useDispatch, useSelector} from "react-redux";
+import {getTopPodcasts} from "../../redux/topPodcasts.slice";
 
 const podcastMatchesFilter = (textToFilterBy) => (podcast) => {
     const textInUpperCase = textToFilterBy.toUpperCase();
@@ -13,16 +14,13 @@ const podcastMatchesFilter = (textToFilterBy) => (podcast) => {
 }
 
 export const Home = () => {
-    const [podcasts, setPodcasts] = useState([]);
+    const { topPodcasts, error } = useSelector(state => state.topPodcasts);
+    const dispatch = useDispatch();
     const [textToFilterBy, setTextToFilterBy] = useState('');
 
     useEffect( () => {
-        const fetchPodcasts = async () => {
-            const podcasts = await podcastService.getTopPodcasts();
-            setPodcasts(podcasts);
-        }
-        fetchPodcasts();
-    }, [])
+        dispatch(getTopPodcasts({}));
+    }, [dispatch])
 
     const onInputChange = (event) => {
         setTextToFilterBy(event.target.value);
@@ -35,7 +33,7 @@ export const Home = () => {
               <input className={styles.filterInput} type="text" placeholder='Filter podcasts...' value={textToFilterBy} onChange={onInputChange}/>
           </div>
           <div className={styles.podcastList}>
-              { podcasts
+              { topPodcasts
                   .filter(podcastMatchesFilter(textToFilterBy))
                   .map(podcast =>
                   <div role='button' className={styles.podcast} key={podcast.id}>
